@@ -1,0 +1,17 @@
+{
+  "domain": "bobcatminer",
+  "name": "Bobcat Miner",
+  "config_flow": true,
+  "documentation": "https://www.home-assistant.io/integrations/bobcatminer",
+  "requirements": [
+    "bobcatpy==1.0.3"
+  ],
+  "ssdp": [],
+  "zeroconf": [],
+  "homekit": {},
+  "dependencies": [],
+  "codeowners": [
+    "@ardevd"
+  ],
+  "iot_class": "cloud_polling"
+}
