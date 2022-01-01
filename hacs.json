@@ -1,0 +1,7 @@
+{
+  "name": "Bobcat Miner Sensor for Home Assistant",
+  "content_in_root": false,
+  "render_readme": true,
+  "iot_class": "cloud_polling"
+}
+
