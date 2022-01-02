@@ -10,7 +10,7 @@ Numerous installation options are available.
 ## Custom Integration Wheels
 Add a file called `bobcatminer.json` in your `custom_components` directory with the following content.
 
-`` json
+```json
 {
   "name": "Bobcat Miner",
   "owner": ["@ardevd"],
