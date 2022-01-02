@@ -4,10 +4,26 @@
 This is a Home Assistant integration for the Bobcat Helium Miner.
 
 ## Installation
+
+Numerous installation options are available.
+
+## Custom Integration Wheels
+Add a file called `bobcatminer.json` in your `custom_components` directory with the following content.
+
+`` json
+{
+  "name": "Bobcat Miner",
+  "owner": ["@ardevd"],
+  "manifest": "https://raw.githubusercontent.com/ardevd/ha-bobcatminer/main/custom_components/bobcatminer/manifest.json",
+  "url": "https://github.com/ardevd/ha-bobcatminer/"
+}
+```
+
+## Manual
 1. Download this repo by either of the following method
 - `git clone https://github.com/ardevd/ha-bobcatminer`
 - Download https://github.com/ardevd/ha-bobcatminer/archive/refs/heads/master.zip
-2. Copy or link this repo into Home Assistant "custome_components" directory
+2. Copy or link this repo into Home Assistant `custom_components` directory
 
 ## Configuration
 Click "Add integration" from Home Assistant, search "Bobcat Miner", click to add.
