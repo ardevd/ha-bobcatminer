@@ -16,7 +16,7 @@ from homeassistant.helpers.update_coordinator import (
 
 from .const import DOMAIN
 
-SCAN_INTERVAL = timedelta(minutes=10)
+SCAN_INTERVAL = timedelta(minutes=15)
 
 SENSORS: Dict[str, SensorEntityDescription] = {
     "sync_gap": SensorEntityDescription(
@@ -39,6 +39,9 @@ SENSORS: Dict[str, SensorEntityDescription] = {
     ),
     "ota_version": SensorEntityDescription(
         key="ota_version", name="OTA Version", icon="mdi:cloud-tags"
+    ),
+    "image": SensorEntityDescription(
+        key="image", name="Miner Image", icon="mdi:docker"
     ),
     "public_ip": SensorEntityDescription(
         key="public_ip", name="Public IP", icon="mdi:ip-network"
