@@ -6,7 +6,7 @@
   "documentation": "https://www.home-assistant.io/integrations/bobcatminer",
   "issue_tracker": "https://github.com/ardevd/ha-bobcatminer/issues",
   "requirements": [
-    "bobcatpy==1.0.4"
+    "bobcatpy==1.0.5"
   ],
   "ssdp": [],
   "zeroconf": [],
