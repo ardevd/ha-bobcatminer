@@ -6,7 +6,7 @@ from typing import Any
 
 import voluptuous as vol
 
-from bobcat import Bobcat
+from bobcatpy import Bobcat
 from homeassistant import config_entries
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
@@ -78,8 +78,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors["base"] = "cannot_connect"
         except InvalidAuth:
             errors["base"] = "invalid_auth"
-        except Exception:  # pylint: disable=broad-except
-            _LOGGER.exception("Unexpected exception")
+        except Exception as ex:  # pylint: disable=broad-except
+            _LOGGER.exception("Unexpected exception: %s", ex)
             errors["base"] = "unknown"
         else:
             return self.async_create_entry(title=info["title"], data=user_input)
