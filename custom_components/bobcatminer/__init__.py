@@ -12,7 +12,7 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import CONFIG_HOST, DOMAIN
+from .const import CONFIG_HOST, CONFIG_TIMEOUT, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
 
     hass_data = dict(entry.data)
-    bobcat = Bobcat(hass_data[CONFIG_HOST])
+    bobcat = Bobcat(miner_ip=hass_data[CONFIG_HOST], get_timeout=hass_data[CONFIG_TIMEOUT])
 
     async def _update_method():
         """Get the latest data from Bobcat Miner."""
