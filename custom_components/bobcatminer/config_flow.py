@@ -34,7 +34,10 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     # Test the connection to the miner
     # __init__ will call ping() for us, but only prints...
     def _validate(host, timeout):
-        miner = Bobcat(miner_ip=host, get_timeout=timeout)
+        miner = Bobcat(
+            miner_ip=host,
+            get_timeout=timeout,
+            auto_connect=False)
 
         try:
             # Socket can still raise exception if the hostname doesn't resolve

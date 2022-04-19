@@ -28,7 +28,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
 
     hass_data = dict(entry.data)
-    bobcat = Bobcat(miner_ip=hass_data[CONFIG_HOST], get_timeout=hass_data[CONFIG_TIMEOUT])
+    bobcat = Bobcat(
+        miner_ip=hass_data[CONFIG_HOST],
+        get_timeout=hass_data[CONFIG_TIMEOUT],
+        auto_connect=False)
 
     async def _update_method():
         """Get the latest data from Bobcat Miner."""
