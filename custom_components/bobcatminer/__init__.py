@@ -33,6 +33,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         get_timeout=hass_data[CONFIG_TIMEOUT],
         auto_connect=False)
 
+    try:
+        if bobcat.ping() != 0:
+            _LOGGER.error('Bobcat failed ping() tests')
+            return False
+    except:
+        _LOGGER.error('Bobcat raised exception during ping() test')
+        return False
+
     async def _update_method():
         """Get the latest data from Bobcat Miner."""
         try:
