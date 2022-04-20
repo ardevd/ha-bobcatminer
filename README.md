@@ -7,6 +7,10 @@ This is a Home Assistant integration for the Bobcat Helium Miner.
 
 Numerous installation options are available.
 
+## HACS (Recommended)
+
+You can install the integration through HACS directly. The integration can also be updated through HACS.
+
 ## Custom Integration Wheels
 Add a file called `bobcatminer.json` in your `custom_components` directory with the following content.
 
