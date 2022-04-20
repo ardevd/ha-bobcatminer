@@ -1,7 +1,7 @@
 # ha-bobcatminer
 
 ## Introduction
-This is a Home Assistant integration for the Bobcat Helium Miner.
+This is a Home Assistant integration for the Bobcat Helium Miner, allowing you to monitor your Bobcat miner's state including sync gap, temperature and public IP.
 
 ## Installation
 
