@@ -31,6 +31,12 @@ SENSORS: Dict[str, SensorEntityDescription] = {
         name="Miner Height",
         icon="mdi:progress-star",
     ),
+    "created": SensorEntityDescription(
+        key="created",
+        device_class=SensorDeviceClass.TIMESTAMP,
+        name="Created",
+        icon="mdi:clock-start",
+    ),
     "temp": SensorEntityDescription(
         key="temp",
         device_class=SensorDeviceClass.TEMPERATURE,
@@ -42,6 +48,9 @@ SENSORS: Dict[str, SensorEntityDescription] = {
     ),
     "image": SensorEntityDescription(
         key="image", name="Miner Image", icon="mdi:docker"
+    ),
+    "image_version": SensorEntityDescription(
+        key="image_version", name="Miner Image Version", icon="mdi:docker"
     ),
     "public_ip": SensorEntityDescription(
         key="public_ip", name="Public IP", icon="mdi:ip-network"
@@ -72,6 +81,11 @@ class BobcatMinerSensor(CoordinatorEntity, SensorEntity):
     ):
         """Initialize miner sensor."""
         super().__init__(coordinator)
+
+        # Failed to get status_summary
+        if "animal" not in coordinator.data:
+            raise RuntimeError('Failed to get correct data from Bobcat')
+
         animal = coordinator.data["animal"]
         readable_animal = animal.replace("-", " ").title()
 
@@ -92,9 +106,16 @@ class BobcatMinerSensor(CoordinatorEntity, SensorEntity):
     @property
     def available(self):
         """Return sensor availability."""
+        if "state" in self.coordinator.data:
+            # bobcatpy will return this if it fails to talk to bobcat
+            return self.coordinator.data["state"] != "unavailable"
+
         return self._available
 
     @property
     def native_value(self):
         """Return the state of the sensor."""
-        return self.coordinator.data[self.entity_description.key]
+        if self.entity_description.key in self.coordinator.data:
+            return self.coordinator.data[self.entity_description.key]
+
+        return None
