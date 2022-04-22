@@ -21,7 +21,7 @@ _LOGGER = logging.getLogger(__name__)
 STEP_MINER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONFIG_HOST): cv.string,
-        vol.Optional(CONFIG_TIMEOUT, default=5): cv.positive_int,
+        vol.Optional(CONFIG_TIMEOUT, default=20): cv.positive_int,
     }
 )
 
@@ -32,7 +32,6 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
     # Test the connection to the miner
-    # __init__ will call ping() for us, but only prints...
     def _validate(host, timeout):
         miner = Bobcat(
             miner_ip=host,
