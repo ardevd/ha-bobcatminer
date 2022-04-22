@@ -44,13 +44,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     async def _update_method():
         """Get the latest data from Bobcat Miner."""
         try:
-            summary = await hass.async_add_executor_job(bobcat.status_summary)
-
-            # bobcatpy will return an empty dict if something went wrong, catch that
-            if not summary:
-                raise UpdateFailed("Failed to get any data from miner")
-
-            return summary
+            # bobcatpy will return dict with 'state' value set to unavailable
+            # if it has any exception, sensor.py will check this state and make
+            # the sensor unavailable if needed
+            return await hass.async_add_executor_job(bobcat.status_summary)
         except Error as err:
             raise UpdateFailed(f"Unable to fetch data: {err}") from err
 
