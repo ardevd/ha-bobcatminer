@@ -34,7 +34,7 @@ SENSORS: Dict[str, SensorEntityDescription] = {
     "created": SensorEntityDescription(
         key="created",
         device_class=SensorDeviceClass.TIMESTAMP,
-        name="Created",
+        name="Uptime",
         icon="mdi:clock-start",
     ),
     "temp": SensorEntityDescription(
