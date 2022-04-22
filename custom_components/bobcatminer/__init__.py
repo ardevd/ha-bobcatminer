@@ -12,7 +12,7 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import CONFIG_HOST, DOMAIN
+from .const import CONFIG_HOST, CONFIG_TIMEOUT, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,11 +28,25 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
 
     hass_data = dict(entry.data)
-    bobcat = Bobcat(hass_data[CONFIG_HOST])
+    bobcat = Bobcat(
+        miner_ip=hass_data[CONFIG_HOST],
+        get_timeout=hass_data[CONFIG_TIMEOUT],
+        auto_connect=False)
+
+    try:
+        if bobcat.ping() != 0:
+            _LOGGER.error('Bobcat failed ping() tests')
+            return False
+    except:
+        _LOGGER.error('Bobcat raised exception during ping() test')
+        return False
 
     async def _update_method():
         """Get the latest data from Bobcat Miner."""
         try:
+            # bobcatpy will return dict with 'state' value set to unavailable
+            # if it has any exception, sensor.py will check this state and make
+            # the sensor unavailable if needed
             return await hass.async_add_executor_job(bobcat.status_summary)
         except Error as err:
             raise UpdateFailed(f"Unable to fetch data: {err}") from err
