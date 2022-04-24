@@ -1,7 +1,5 @@
 # ha-bobcatminer
-<p align="center">
-  <img alt="VS Code in action" src="https://user-images.githubusercontent.com/366855/164951482-a8c1107d-8be7-4f8d-9c9b-838f36bbbe15.png">
-</p>
+![ha-bobcatminer](https://user-images.githubusercontent.com/366855/164951518-b39a20b9-0040-4b42-a727-916d2852cd30.png)
 
 ## Introduction
 This is a Home Assistant integration for the Bobcat Helium Miner, allowing you to monitor your Bobcat miner's state including sync gap, temperature and public IP.
