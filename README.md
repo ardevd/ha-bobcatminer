@@ -2,7 +2,7 @@
 ![ha-bobcatminer](https://user-images.githubusercontent.com/366855/164951518-b39a20b9-0040-4b42-a727-916d2852cd30.png)
 
 ## Introduction
-This is a Home Assistant integration for the Bobcat Helium Miner, allowing you to monitor your Bobcat miner's state including sync gap, temperature and public IP.
+This is a Home Assistant integration for the Bobcat Helium Miner, allowing you to monitor your Bobcat miner's state including running state, temperature and public IP.
 
 ## Installation
 
@@ -36,5 +36,3 @@ Click "Add integration" from Home Assistant, search "Bobcat Miner", click to add
 Enter the IP address asssociated with the Bobcat miner. The diagnoser needs to be accessible from Home Assistant for the integration to work.
 
 After setting up, miner status should be available in Home Assistant.
-
-

@@ -19,18 +19,6 @@ from .const import DOMAIN
 SCAN_INTERVAL = timedelta(minutes=15)
 
 SENSORS: Dict[str, SensorEntityDescription] = {
-    "sync_gap": SensorEntityDescription(
-        key="sync_gap",
-        native_unit_of_measurement="blocks",
-        name="Sync Gap",
-        icon="mdi:cloud-sync",
-    ),
-    "miner_height": SensorEntityDescription(
-        key="miner_height",
-        native_unit_of_measurement="blocks",
-        name="Miner Height",
-        icon="mdi:progress-star",
-    ),
     "created": SensorEntityDescription(
         key="created",
         name="Created",
