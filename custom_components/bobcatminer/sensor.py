@@ -66,7 +66,7 @@ class BobcatMinerSensor(CoordinatorEntity, SensorEntity):
         self,
         coordinator: DataUpdateCoordinator,
         entity_description: SensorEntityDescription,
-    ):
+    ) -> None :
         """Initialize miner sensor."""
         super().__init__(coordinator)
 
