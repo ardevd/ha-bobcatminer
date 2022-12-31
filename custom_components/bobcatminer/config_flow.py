@@ -30,12 +30,15 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
-    # Test the connection to the miner
+
+    # Test the connection to the miner and get miner name
     def _validate(host, timeout):
         miner = Bobcat(
             miner_ip=host,
             get_timeout=timeout,
             auto_connect=False)
+
+        miner_name = "Bobcat Miner"
 
         try:
             # Socket can still raise exception if the hostname doesn't resolve
@@ -47,11 +50,15 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
         if socket_errno != 0:
             raise CannotConnect
 
-    await hass.async_add_executor_job(
+        # Get miner status
+        miner_name = miner.status_summary()["animal"]
+        return miner_name
+
+    miner_name = await hass.async_add_executor_job(
         _validate, data[CONFIG_HOST], data[CONFIG_TIMEOUT]
     )
 
-    return {"title": "Bobcat Miner"}
+    return {"title": miner_name}
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
