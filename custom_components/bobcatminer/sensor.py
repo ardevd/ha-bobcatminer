@@ -1,6 +1,5 @@
 """Sensor platform for the Bobcat Miner."""
 from datetime import timedelta
-from typing import Dict
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,

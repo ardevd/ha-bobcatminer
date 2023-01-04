@@ -23,6 +23,7 @@ STEP_MINER_DATA_SCHEMA = vol.Schema(
     }
 )
 
+
 async def validate_input(data: dict[str, Any]) -> dict[str, Any]:
     """Validate the user input allows us to connect.
 
@@ -30,8 +31,7 @@ async def validate_input(data: dict[str, Any]) -> dict[str, Any]:
     """
 
     # Test the connection to the miner and get miner name
-    bobcat = Bobcat(
-        miner_ip=data[CONFIG_HOST])
+    bobcat = Bobcat(miner_ip=data[CONFIG_HOST])
 
     try:
         await bobcat.status_summary()
