@@ -8,57 +8,42 @@ import voluptuous as vol
 
 from bobcatpy import Bobcat
 from homeassistant import config_entries
-from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 import homeassistant.helpers.config_validation as cv
 
-from .const import CONFIG_HOST, CONFIG_TIMEOUT, DOMAIN
+from .const import CONFIG_HOST, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-# TODO adjust the data schema to the data that you need
+# adjust the data schema to the data that you need
 STEP_MINER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONFIG_HOST): cv.string,
-        vol.Optional(CONFIG_TIMEOUT, default=20): cv.positive_int,
     }
 )
 
-async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
+
+async def validate_input(data: dict[str, Any]) -> dict[str, Any]:
     """Validate the user input allows us to connect.
 
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
 
     # Test the connection to the miner and get miner name
-    def _validate(host, timeout):
-        miner = Bobcat(
-            miner_ip=host,
-            get_timeout=timeout,
-            auto_connect=False)
+    bobcat = Bobcat(miner_ip=data[CONFIG_HOST])
 
-        miner_name = "Bobcat Miner"
+    try:
+        await bobcat.status_summary()
 
-        try:
-            # Socket can still raise exception if the hostname doesn't resolve
-            socket_errno = miner.ping()
-        except:
-            raise CannotConnect
+        # Get miner animal name
+        miner_status = await bobcat.status_summary()
+        miner_animal = miner_status["animal"]
+        return {"title": miner_animal}
 
-        # Did it fail for any reason, like timeout?
-        if socket_errno != 0:
-            raise CannotConnect
-
-        # Get miner status
-        miner_name = miner.status_summary()["animal"]
-        return miner_name
-
-    miner_name = await hass.async_add_executor_job(
-        _validate, data[CONFIG_HOST], data[CONFIG_TIMEOUT]
-    )
-
-    return {"title": miner_name}
+    except Exception as exc:
+        _LOGGER.error("Bobcat raised exception when retrieving miner status")
+        raise CannotConnect from exc
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -78,11 +63,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         try:
-            info = await validate_input(self.hass, user_input)
+            info = await validate_input(user_input)
         except CannotConnect:
             errors["base"] = "cannot_connect"
-        except InvalidAuth:
-            errors["base"] = "invalid_auth"
         except Exception:  # pylint: disable=broad-except
             _LOGGER.exception("Unexpected exception")
             errors["base"] = "unknown"
@@ -96,7 +79,3 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 class CannotConnect(HomeAssistantError):
     """Error to indicate we cannot connect."""
-
-
-class InvalidAuth(HomeAssistantError):
-    """Error to indicate there is invalid auth."""

@@ -3,4 +3,3 @@
 DOMAIN = "bobcatminer"
 
 CONFIG_HOST = "host"
-CONFIG_TIMEOUT = "timeout"
