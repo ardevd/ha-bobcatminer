@@ -18,13 +18,12 @@ from .const import DOMAIN
 
 SCAN_INTERVAL = timedelta(minutes=15)
 
-SENSORS: Dict[str, SensorEntityDescription] = {
+SENSORS: dict[str, SensorEntityDescription] = {
     "created": SensorEntityDescription(
         key="created",
         name="Created",
         icon="mdi:clock-start",
     ),
-
     "temp": SensorEntityDescription(
         key="temp",
         device_class=SensorDeviceClass.TEMPERATURE,
@@ -52,6 +51,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
     coordinator: DataUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
 
+    await coordinator.async_config_entry_first_refresh()
+
     entities = []
     for sensor in SENSORS.values():
         entities.append(BobcatMinerSensor(coordinator, sensor))
@@ -66,13 +67,13 @@ class BobcatMinerSensor(CoordinatorEntity, SensorEntity):
         self,
         coordinator: DataUpdateCoordinator,
         entity_description: SensorEntityDescription,
-    ) -> None :
+    ) -> None:
         """Initialize miner sensor."""
         super().__init__(coordinator)
 
         # Failed to get status_summary
         if "animal" not in coordinator.data:
-            raise RuntimeError('Failed to get correct data from Bobcat')
+            raise RuntimeError("Failed to get correct data from Bobcat")
 
         animal = coordinator.data["animal"]
         readable_animal = animal.replace("-", " ").title()

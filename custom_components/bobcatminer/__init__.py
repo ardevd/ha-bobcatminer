@@ -4,6 +4,7 @@ from __future__ import annotations
 from datetime import timedelta
 import logging
 
+import async_timeout
 from bobcatpy import Bobcat
 from voluptuous.error import Error
 
@@ -12,11 +13,11 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import CONFIG_HOST, CONFIG_TIMEOUT, DOMAIN
+from .const import CONFIG_HOST, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-SCAN_INTERVAL = timedelta(minutes=6)
+SCAN_INTERVAL = timedelta(minutes=30)
 
 # Supported platforms
 PLATFORMS: list[Platform] = [Platform.SENSOR]
@@ -27,30 +28,23 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     hass.data.setdefault(DOMAIN, {})
 
+    # Get config values from hass
     hass_data = dict(entry.data)
-    bobcat = Bobcat(
-        miner_ip=hass_data[CONFIG_HOST],
-        get_timeout=hass_data[CONFIG_TIMEOUT],
-        auto_connect=False)
 
-    try:
-        if bobcat.ping() != 0:
-            _LOGGER.error('Bobcat failed ping() tests')
-            return False
-    except:
-        _LOGGER.error('Bobcat raised exception during ping() test')
-        return False
+    # Instantiate the Bobcat Miner API
+    bobcat = Bobcat(miner_ip=hass_data[CONFIG_HOST])
 
+    # Update method that retrieves new data from the miner
     async def _update_method():
         """Get the latest data from Bobcat Miner."""
         try:
-            # bobcatpy will return dict with 'state' value set to unavailable
-            # if it has any exception, sensor.py will check this state and make
-            # the sensor unavailable if needed
-            return await hass.async_add_executor_job(bobcat.status_summary)
+            async with async_timeout.timeout(30):
+                return await bobcat.status_summary()
+
         except Error as err:
             raise UpdateFailed(f"Unable to fetch data: {err}") from err
 
+    # Construct the DataUpdateCoordinator object
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
@@ -59,10 +53,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         update_interval=SCAN_INTERVAL,
     )
 
-    await coordinator.async_config_entry_first_refresh()
+    # Store a reference to the coordinator
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
-    hass.config_entries.async_setup_platforms(entry, PLATFORMS)
+    # Load platforms from the config
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True
 
