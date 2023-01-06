@@ -4,19 +4,17 @@ from __future__ import annotations
 
 
 from bobcatpy import Bobcat
-from voluptuous.error import Error
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import CONFIG_HOST, DOMAIN
 from .coordinator import BobcatMinerDataUpdateCoordinator
 
 
 # Supported platforms
-PLATFORMS: list[Platform] = [Platform.SENSOR]
+PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.BUTTON]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -31,7 +29,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     bobcat = Bobcat(miner_ip=hass_data[CONFIG_HOST])
 
     # Construct the DataUpdateCoordinator object
-    coordinator = BobcatMinerDataUpdateCoordinator(hass, bobcat)
+    coordinator = BobcatMinerDataUpdateCoordinator(hass, bobcat, entry.title)
 
     # Store a reference to the coordinator
     hass.data[DOMAIN][entry.entry_id] = coordinator
