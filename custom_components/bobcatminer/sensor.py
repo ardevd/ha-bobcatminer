@@ -93,6 +93,13 @@ class BobcatMinerSensor(CoordinatorEntity, SensorEntity):
             manufacturer="Bobcat",
         )
         self._state = None
+        # Entity name property represents the entity itself
+        self._attr_has_entity_name = True
+
+    @property
+    def name(self):
+        """Name of the entity."""
+        return self.entity_description.name
 
     @property
     def available(self):
