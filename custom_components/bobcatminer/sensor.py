@@ -41,6 +41,9 @@ SENSORS: dict[str, SensorEntityDescription] = {
     "public_ip": SensorEntityDescription(
         key="public_ip", name="Public IP", icon="mdi:ip-network"
     ),
+    "led_color": SensorEntityDescription(
+        key="led", name="LED Color", icon="mdi:led-outline"
+    ),
     "state": SensorEntityDescription(key="state", name="State", icon="mdi:console"),
 }
 
