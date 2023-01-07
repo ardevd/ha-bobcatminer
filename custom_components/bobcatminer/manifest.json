@@ -1,7 +1,7 @@
 {
   "domain": "bobcatminer",
   "name": "Bobcat Miner",
-  "version": "0.6.0",
+  "version": "0.8.0",
   "config_flow": true,
   "integration_type": "device",
   "documentation": "https://www.home-assistant.io/integrations/bobcatminer",
