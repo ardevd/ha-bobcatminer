@@ -1,6 +1,4 @@
 """Sensor platform for the Bobcat Miner."""
-from datetime import timedelta
-
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -8,14 +6,10 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.const import UnitOfTemperature
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
-    DataUpdateCoordinator,
-)
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
-
-SCAN_INTERVAL = timedelta(minutes=15)
+from .coordinator import BobcatMinerDataUpdateCoordinator
 
 SENSORS: dict[str, SensorEntityDescription] = {
     "created": SensorEntityDescription(
@@ -51,9 +45,12 @@ SENSORS: dict[str, SensorEntityDescription] = {
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Sensor setup based on config entry created in the integrations UI."""
 
-    coordinator: DataUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    coordinator: BobcatMinerDataUpdateCoordinator = hass.data[DOMAIN][
+        config_entry.entry_id
+    ]
 
-    await coordinator.async_config_entry_first_refresh()
+    # Due to the Bobcat miner's aggressive rate limiting, we avoid initial data fresh on platform setup.
+    # await coordinator.async_config_entry_first_refresh()
 
     entities = []
     for sensor in SENSORS.values():
@@ -67,22 +64,17 @@ class BobcatMinerSensor(CoordinatorEntity, SensorEntity):
 
     def __init__(
         self,
-        coordinator: DataUpdateCoordinator,
+        coordinator: BobcatMinerDataUpdateCoordinator,
         entity_description: SensorEntityDescription,
     ) -> None:
         """Initialize miner sensor."""
         super().__init__(coordinator)
 
-        # Failed to get status_summary
-        if "animal" not in coordinator.data:
-            raise RuntimeError("Failed to get correct data from Bobcat")
-
-        animal = coordinator.data["animal"]
+        animal = coordinator.animal
         readable_animal = animal.replace("-", " ").title()
 
         self.entity_description = entity_description
 
-        self._attr_extra_state_attributes = {}
         self._attr_unique_id = f"{readable_animal} {entity_description.key}"
         self._id = animal
         self._attr_name = f"{readable_animal} {entity_description.name}"
@@ -93,15 +85,23 @@ class BobcatMinerSensor(CoordinatorEntity, SensorEntity):
             manufacturer="Bobcat",
         )
         self._state = None
+        # Entity name property represents the entity itself
+        self._attr_has_entity_name = True
+
+    @property
+    def name(self):
+        """Name of the entity."""
+        return self.entity_description.name
 
     @property
     def available(self):
         """Return sensor availability."""
-        if "state" in self.coordinator.data:
+        if self.coordinator.data and "state" in self.coordinator.data:
             # bobcatpy will return this if it fails to talk to bobcat
             return self.coordinator.data["state"] != "unavailable"
 
-        return self._available
+        # State key not present, assume miner is unavailable
+        return False
 
     @property
     def native_value(self):

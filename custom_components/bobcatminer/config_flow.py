@@ -29,21 +29,13 @@ async def validate_input(data: dict[str, Any]) -> dict[str, Any]:
 
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
-
     # Test the connection to the miner and get miner name
     bobcat = Bobcat(miner_ip=data[CONFIG_HOST])
 
-    try:
-        await bobcat.status_summary()
-
-        # Get miner animal name
-        miner_status = await bobcat.status_summary()
-        miner_animal = miner_status["animal"]
-        return {"title": miner_animal}
-
-    except Exception as exc:
-        _LOGGER.error("Bobcat raised exception when retrieving miner status")
-        raise CannotConnect from exc
+    # Get miner animal name
+    miner_status = await bobcat.miner_status()
+    miner_animal = miner_status["animal"]
+    return {"title": miner_animal}
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
