@@ -53,7 +53,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         config_entry.entry_id
     ]
 
-    await coordinator.async_config_entry_first_refresh()
+    # Due to the Bobcat miner's aggressive rate limiting, we avoid initial data fresh on platform setup.
+    # await coordinator.async_config_entry_first_refresh()
 
     entities = []
     for sensor in SENSORS.values():
@@ -99,7 +100,7 @@ class BobcatMinerSensor(CoordinatorEntity, SensorEntity):
     @property
     def available(self):
         """Return sensor availability."""
-        if "state" in self.coordinator.data:
+        if self.coordinator.data and "state" in self.coordinator.data:
             # bobcatpy will return this if it fails to talk to bobcat
             return self.coordinator.data["state"] != "unavailable"
 
