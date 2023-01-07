@@ -1,6 +1,4 @@
 """Sensor platform for the Bobcat Miner."""
-from datetime import timedelta
-
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -12,8 +10,6 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import BobcatMinerDataUpdateCoordinator
-
-SCAN_INTERVAL = timedelta(minutes=15)
 
 SENSORS: dict[str, SensorEntityDescription] = {
     "created": SensorEntityDescription(
