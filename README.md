@@ -1,5 +1,6 @@
 # ha-bobcatminer
-![bobcat-ha](https://user-images.githubusercontent.com/366855/210960845-45ede62b-1503-4090-bdd0-3629422999ab.png)
+![ha-bobcatminer](https://user-images.githubusercontent.com/366855/211172373-249c50cc-6cea-46df-8d2c-ed393b865606.png)
+
 
 ## Introduction
 This is a Home Assistant integration for the Bobcat Helium Miner, allowing you to monitor your Bobcat miner's state including running state, temperature and public IP.
