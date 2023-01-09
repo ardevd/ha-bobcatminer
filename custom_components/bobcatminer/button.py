@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
@@ -43,6 +42,13 @@ REBOOT_BUTTON = BobcatMinerButtonDescription(
     press_action=lambda miner: miner.reboot(),
 )
 
+RESET_BUTTON = BobcatMinerButtonDescription(
+    key="reset",
+    name="Reset Miner",
+    icon="mdi:eraser",
+    press_action=lambda miner: miner.reset(),
+)
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -54,6 +60,7 @@ async def async_setup_entry(
 
     entities = []
     entities.append(BobcatMinerButton(coordinator, REBOOT_BUTTON))
+    entities.append(BobcatMinerButton(coordinator, RESET_BUTTON))
     async_add_entities(entities, True)
 
 
