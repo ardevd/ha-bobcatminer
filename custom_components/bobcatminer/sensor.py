@@ -24,7 +24,7 @@ SENSORS: dict[str, SensorEntityDescription] = {
         name="Temperature0",
     ),
     "temp1": SensorEntityDescription(
-        key="temp0",
+        key="temp1",
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         name="Temperature1",
