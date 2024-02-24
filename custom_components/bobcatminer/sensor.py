@@ -17,11 +17,17 @@ SENSORS: dict[str, SensorEntityDescription] = {
         name="Created",
         icon="mdi:clock-start",
     ),
-    "temp": SensorEntityDescription(
-        key="temp",
+    "temp0": SensorEntityDescription(
+        key="temp0",
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        name="Temperature",
+        name="Temperature0",
+    ),
+    "temp1": SensorEntityDescription(
+        key="temp0",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        name="Temperature1",
     ),
     "ota_version": SensorEntityDescription(
         key="ota_version", name="OTA Version", icon="mdi:cloud-tags"
